@@ -4,14 +4,6 @@ using System.Numerics;
 using System.Security.Cryptography;
 using Dirichlet.Numerics;
 
-class Program 
-{
-    static void Main() 
-    {
-        Console.WriteLine(32768 * 32768);
-        var x = NumTools.SegmentedSieve(1000000000, 32768);
-    }
-}
 static class QuadraticSieve128
 {
 
