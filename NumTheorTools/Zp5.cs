@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace NumTheorTools
 {
+    // Arithmetic in ring (field) Zp extended with imaginary root of 5.
     internal struct Zp5BIG
     {
         public BigInteger RealPart;
