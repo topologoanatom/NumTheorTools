@@ -18,7 +18,6 @@ static class QuadraticSieve128
     static int SIMDVectorSizeInt16 = Vector<ushort>.Count;
     public static List<Int128> findFactor(Int128 n, List<int> primes, int baseSize, int logTolerance, int intervalSize)
     {
-        var watch = new Stopwatch();
         List<int> factorBase = getFactorBase(n, baseSize, primes);
         List<byte> factorBaseLogs = new List<byte>() { };
         List<int> factorBaseRoots = new List<int>();
