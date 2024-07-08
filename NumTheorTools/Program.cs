@@ -3,15 +3,9 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Security.Cryptography;
 using Dirichlet.Numerics;
+using NumTheorTools;
 
-class Program 
-{
-    static void Main() 
-    {
-        Console.WriteLine(32768 * 32768);
-        var x = NumTools.SegmentedSieve(1000000000, 32768);
-    }
-}
+
 static class QuadraticSieve128
 {
 
@@ -26,7 +20,6 @@ static class QuadraticSieve128
     static int SIMDVectorSizeInt16 = Vector<ushort>.Count;
     public static List<Int128> findFactor(Int128 n, List<int> primes, int baseSize, int logTolerance, int intervalSize)
     {
-        var watch = new Stopwatch();
         List<int> factorBase = getFactorBase(n, baseSize, primes);
         List<byte> factorBaseLogs = new List<byte>() { };
         List<int> factorBaseRoots = new List<int>();
@@ -1057,6 +1050,38 @@ static class NumTools
             }
         }
         return MillerRabin(n, cycles);
+    }
+    // Quadratic Frobenius test with fixed (Fibonacci's) polynomial.
+    public static bool QuadraticFrobeniusFib(BigInteger n)
+    {
+        int residue = (int)(n % 10);
+        Zp5BIG phi = new Zp5BIG(1, 1, n) * new Zp5BIG(ExtendedEuclidean(2, n).Item2, 0, n);
+        bool probablyPrime = false;
+        BigInteger power = 1;
+        if (residue == 7 || residue == 3)
+        {
+            power = (n + 1);
+        }
+        if (residue == 1 || residue == 9)
+        {
+            power = n - 1;
+        }
+        Zp5BIG x = phi ^ power;
+        probablyPrime = false;
+        if (residue == 7 || residue == 3)
+        {
+            while (x.RealPart == 1)
+            {
+                power >>= 1;
+                x = Zp5BIG.BarretReductionRaise(phi, power);
+            }
+            probablyPrime = x.RealPart == n - 1;
+        }
+        if (residue == 1 || residue == 9)
+        {
+            probablyPrime = x.RealPart == 0 || x.QuadraticPart == 0;
+        }
+        return probablyPrime;
     }
     public static bool MillerRabin(BigInteger p, int cycles)
     {
